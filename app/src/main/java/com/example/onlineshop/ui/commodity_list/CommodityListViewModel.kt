@@ -9,6 +9,9 @@ import com.example.onlineshop.data.network.DefaultPagintor
 import com.example.onlineshop.data.repository.CommodityRepository
 import com.example.onlineshop.ui.model.Commodity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -22,6 +25,9 @@ class CommodityListViewModel @Inject constructor(
 
     var uiState by mutableStateOf(UiState())
     private set
+
+    private val _detailCommodity = MutableStateFlow<Commodity?>(null)
+    val detailCommodity = _detailCommodity.asStateFlow()
 
     private val paginator = DefaultPagintor(
         initialKey = uiState.page,
@@ -53,7 +59,7 @@ class CommodityListViewModel @Inject constructor(
     fun addCommodity(commodity: Commodity) {
         val items = uiState.items
         items.find { it.id == commodity.id }?.apply {
-            qtyState++
+            qty++
         }
         uiState = uiState.copy(
             items = items
@@ -71,13 +77,13 @@ class CommodityListViewModel @Inject constructor(
     }
 
     fun removeCommodity(commodity: Commodity) {
-        if (commodity.qtyState == 0) {
+        if (commodity.qty == 0) {
             return
         }
 
         val items = uiState.items
         items.find { it.id == commodity.id }?.apply {
-            qtyState--
+            qty--
         }
 
         val lastExpense = uiState.totalExpense
@@ -99,6 +105,12 @@ class CommodityListViewModel @Inject constructor(
         viewModelScope.launch {
             paginator.loadNextItems()
             uiState = uiState.copy(onSaleTime = onSaleTime())
+        }
+    }
+
+    fun onCommodityDetail(commodity: Commodity) {
+        _detailCommodity.update {
+            commodity
         }
     }
 

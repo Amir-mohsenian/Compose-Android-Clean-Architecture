@@ -6,22 +6,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.onlineshop.ui.model.Commodity
 import com.example.onlineshop.ui.theme.OnlineShopTheme
 
 @Composable
 fun CommodityListScreen(
     modifier: Modifier = Modifier,
-    viewModel: CommodityListViewModel = hiltViewModel()
+    viewModel: CommodityListViewModel,
+    onCommodityClick: (Commodity) -> Unit
 ) {
     val uiState = viewModel.uiState
-
     Column {
         LazyColumn(modifier = Modifier.weight(1f)) {
-            items(uiState.items.size) { i ->
+            items(uiState.items.size, key = { uiState.items[it].id }) { i ->
                 if (i >= uiState.items.size - 1 && !uiState.endReached && !uiState.isLoading) {
                     viewModel.loadMoreCommodity()
                 }
@@ -29,7 +30,9 @@ fun CommodityListScreen(
                 CommodityItem(
                     modifier = Modifier.fillMaxWidth(),
                     commodity = uiState.items[i],
-                    onClick = {},
+                    onClick = {
+                        onCommodityClick(it)
+                    },
                     addQuantity = {
                         viewModel.addCommodity(it)
                     },
@@ -53,11 +56,17 @@ fun CommodityListScreen(
             }
         }
 
-        ExpenseBottomItem(totalExpense = uiState.totalExpense)
+        ExpenseBottomItem(
+            modifier = Modifier.fillMaxWidth(),
+            totalExpense = uiState.totalExpense,
+            hasError = uiState.minExpenseError
+        )
 
         Button(
             enabled = !uiState.minExpenseError && uiState.onSaleTime,
-            modifier = Modifier.height(48.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
             onClick = {
                 viewModel.proceedCommodities()
             }) {
@@ -95,7 +104,7 @@ fun CommodityItem(
                     Text(text = "ADD")
                 }
 
-                Text(text = commodity.qtyState.toString())
+                Text(text = commodity.qty.toString())
 
                 Button(onClick = { removeQuantity(commodity) }) {
                     Text(text = "REMOVE")
@@ -108,10 +117,14 @@ fun CommodityItem(
 @Composable
 fun ExpenseBottomItem(
     modifier: Modifier = Modifier,
-    totalExpense: Long
+    totalExpense: Long,
+    hasError: Boolean
 ) {
-    Card(modifier = Modifier.height(48.dp)) {
-        Text(text = "Expense is : $totalExpense")
+    Card(
+        modifier = modifier.height(48.dp), backgroundColor =
+        if (hasError) Color.Red else Color.Gray
+    ) {
+        Text(text = "Expense is : $totalExpense", textAlign = TextAlign.Center)
     }
 }
 
@@ -120,7 +133,7 @@ fun ExpenseBottomItem(
 fun CommodityListScreenPreview() {
     OnlineShopTheme {
         Surface {
-            ExpenseBottomItem(totalExpense = 234324324L)
+
         }
     }
 }

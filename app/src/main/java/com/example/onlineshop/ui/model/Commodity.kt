@@ -10,6 +10,4 @@ data class Commodity(
     val title: String,
     val desc: String,
     var qty: Int
-) {
-    var qtyState by mutableStateOf(qty)
-}
+)
