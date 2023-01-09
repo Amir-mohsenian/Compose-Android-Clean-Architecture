@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import com.example.onlineshop.ui.commodity_detail.CommodityDetailScreen
 import com.example.onlineshop.ui.commodity_list.CommodityListScreen
 import com.example.onlineshop.ui.commodity_list.CommodityListViewModel
@@ -35,7 +36,9 @@ fun OnlineShopNavHost(
             val parentViewModel = hiltViewModel<CommodityListViewModel>(parentEntry)
             CommodityListScreen(viewModel = parentViewModel) {
                 parentViewModel.onCommodityDetail(it)
-                navController.navigate(CommodityNavigation.CommodityDetailDest.route)
+                navController.navigate(CommodityNavigation.CommodityDetailDest.route, navOptions {
+                    launchSingleTop = true
+                })
             }
         }
 
