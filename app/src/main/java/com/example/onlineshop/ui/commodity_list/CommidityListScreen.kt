@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.onlineshop.R
 import com.example.onlineshop.ui.model.Commodity
 import com.example.onlineshop.ui.theme.*
@@ -204,7 +205,7 @@ fun ExpenseBottomItem(
 fun CommodityListScreenPreview() {
     OnlineShopTheme {
         Surface {
-
+            CommodityListScreen(viewModel = hiltViewModel(), onCommodityClick = {})
         }
     }
 }
