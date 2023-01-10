@@ -58,9 +58,8 @@ class CommodityListViewModel @Inject constructor(
 
     fun addCommodity(commodity: Commodity) {
         val items = uiState.items
-        items.find { it.id == commodity.id }?.apply {
-            qty++
-        }
+        items.find { it.id == commodity.id }?.addQuantity()
+
         uiState = uiState.copy(
             items = items
         )
@@ -77,14 +76,12 @@ class CommodityListViewModel @Inject constructor(
     }
 
     fun removeCommodity(commodity: Commodity) {
-        if (commodity.qty == 0) {
+        if (commodity.getQuantity() == 0) {
             return
         }
 
         val items = uiState.items
-        items.find { it.id == commodity.id }?.apply {
-            qty--
-        }
+        items.find { it.id == commodity.id }?.removeQuantity()
 
         val lastExpense = uiState.totalExpense
         val totalExpense = lastExpense - commodity.price
@@ -98,7 +95,7 @@ class CommodityListViewModel @Inject constructor(
     }
 
     fun proceedCommodities() {
-
+        // TODO: Continue to get money
     }
 
     fun loadMoreCommodity() {

@@ -13,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.onlineshop.R
 import com.example.onlineshop.ui.model.Commodity
 import com.example.onlineshop.ui.theme.OnlineShopTheme
 
@@ -82,7 +84,7 @@ fun CommodityListScreen(
                 viewModel.proceedCommodities()
             }) {
             Text(
-                text = "Checking out",
+                text = stringResource(id = R.string.title_checking_out),
                 color = if (!uiState.onSaleTime || uiState.minExpenseError) Color.Gray else Color.White,
                 style = MaterialTheme.typography.button.copy(
                     fontSize = 16.sp,
@@ -158,7 +160,7 @@ fun CommodityItem(
                         })
 
                 Text(
-                    text = commodity.qty.toString(),
+                    text = commodity.getQuantity().toString(),
                     style = MaterialTheme.typography.h6,
                     color = Color.Blue
                 )
@@ -184,7 +186,7 @@ fun ExpenseBottomItem(
     hasError: Boolean
 ) {
     Text(
-        text = "Expense is : $totalExpense",
+        text = stringResource(id = R.string.title_total_expense, totalExpense),
         textAlign = TextAlign.Center,
         modifier = Modifier
             .fillMaxWidth()

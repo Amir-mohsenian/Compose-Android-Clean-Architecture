@@ -29,7 +29,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
-    // A surface container using the 'background' color from the theme
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     Scaffold(

@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">OnlineShop</string>
     <string name="title_commodity_page">Commodities</string>
+    <string name="title_total_expense">Total Expenses: %d</string>
+    <string name="title_checking_out">Checking Out</string>
 </resources>

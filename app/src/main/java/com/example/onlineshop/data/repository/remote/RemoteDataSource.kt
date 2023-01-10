@@ -26,7 +26,7 @@ class RemoteDataSourceImp @Inject constructor(): RemoteDataSource {
     private val fakeData = (1..1000).map {
         CommodityResponse(
             id = it,
-            price = Random.nextLong(from = 5000L, until = 10000000L),
+            price = Random.nextLong(from = 5000L, until = 100000L),
             title = "Item $it",
             desc = "Description $it"
         )
