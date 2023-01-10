@@ -63,7 +63,7 @@ fun CommodityListScreen(
                             .padding(8.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(color = Green500)
                     }
                 }
             }
