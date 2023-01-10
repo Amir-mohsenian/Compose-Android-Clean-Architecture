@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.onlineshop.R
 import com.example.onlineshop.ui.model.Commodity
-import com.example.onlineshop.ui.theme.OnlineShopTheme
+import com.example.onlineshop.ui.theme.*
 
 @Composable
 fun CommodityListScreen(
@@ -152,7 +152,7 @@ fun CommodityItem(
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = null,
-                    tint = MaterialTheme.colors.primaryVariant,
+                    tint = Red700,
                     modifier = Modifier
                         .size(36.dp)
                         .clickable {
@@ -162,13 +162,13 @@ fun CommodityItem(
                 Text(
                     text = commodity.getQuantity().toString(),
                     style = MaterialTheme.typography.h6,
-                    color = Color.Blue
+                    color = Green500
                 )
 
                 Icon(
                     imageVector = Icons.Filled.Remove,
                     contentDescription = null,
-                    tint = MaterialTheme.colors.primaryVariant,
+                    tint = Red700,
                     modifier = Modifier
                         .size(36.dp)
                         .clickable {
@@ -192,7 +192,7 @@ fun ExpenseBottomItem(
             .fillMaxWidth()
             .height(56.dp)
             .background(
-                color = if (hasError) Color.Red else Color.Gray
+                color = if (hasError) Red500 else Green500
             )
             .wrapContentHeight(align = Alignment.CenterVertically)
 

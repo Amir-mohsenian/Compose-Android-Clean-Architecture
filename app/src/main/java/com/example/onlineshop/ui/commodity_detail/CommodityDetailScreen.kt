@@ -29,7 +29,6 @@ fun CommodityDetailScreen(modifier: Modifier = Modifier, viewModel: CommodityLis
                 }
                 quantity--
             })
-
     }
 }
 
