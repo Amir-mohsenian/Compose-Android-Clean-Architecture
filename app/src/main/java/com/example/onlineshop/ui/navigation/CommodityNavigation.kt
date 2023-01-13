@@ -13,7 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
 import com.example.onlineshop.R
 import com.example.onlineshop.ui.commodity_detail.CommodityDetailScreen
-import com.example.onlineshop.ui.commodity_list.CommodityListScreen
+import com.example.onlineshop.ui.commodity_list.CommodityListRoute
 import com.example.onlineshop.ui.commodity_list.CommodityListViewModel
 
 sealed class CommodityNavigation(val route: String) {
@@ -47,7 +47,7 @@ fun OnlineShopNavHost(
                 navController.getBackStackEntry(CommodityNavigation.CommodityListDest.route)
             }
             val parentViewModel = hiltViewModel<CommodityListViewModel>(parentEntry)
-            CommodityListScreen(viewModel = parentViewModel) {
+            CommodityListRoute(viewModel = parentViewModel) {
                 parentViewModel.onCommodityDetail(it)
                 onPageChange(it.title)
                 navController.navigate(CommodityNavigation.CommodityDetailDest.route, navOptions {

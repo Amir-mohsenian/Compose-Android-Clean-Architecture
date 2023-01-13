@@ -6,13 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.PriceChange
-import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,33 +24,60 @@ import com.example.onlineshop.ui.model.Commodity
 import com.example.onlineshop.ui.theme.*
 
 @Composable
-fun CommodityListScreen(
+fun CommodityListRoute(
     modifier: Modifier = Modifier,
     viewModel: CommodityListViewModel,
     onCommodityClick: (Commodity) -> Unit
 ) {
     val uiState = viewModel.uiState
+
+    CommodityListScreen(
+        uiState = uiState,
+        onClick = onCommodityClick,
+        onAddQty = { viewModel.addCommodity(it) },
+        onRemoveQty = { viewModel.removeCommodity(it) },
+        requestMoreData = { viewModel.loadMoreCommodity() },
+        submitCommodities = { viewModel.proceedCommodities() }
+    )
+}
+
+@Composable
+fun CommodityListScreen(
+    modifier: Modifier = Modifier,
+    uiState: UiState,
+    onClick: (Commodity) -> Unit,
+    onAddQty: (Commodity) -> Unit,
+    onRemoveQty: (Commodity) -> Unit,
+    requestMoreData: () -> Unit,
+    submitCommodities: () -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize()) {
+        if (!uiState.isLoading && uiState.items.isEmpty()) {
+            EmptyList(modifier = Modifier.padding(top = 24.dp))
+            return@Column
+        }
         LazyColumn(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .testTag("commodity_list"),
             contentPadding = PaddingValues(top = 12.dp, bottom = 12.dp)
         ) {
             items(uiState.items.size, key = { uiState.items[it].id }) { i ->
                 if (i >= uiState.items.size - 1 && !uiState.endReached && !uiState.isLoading) {
-                    viewModel.loadMoreCommodity()
+                    requestMoreData()
                 }
 
                 CommodityItem(
                     modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 8.dp),
                     commodity = uiState.items[i],
                     onClick = {
-                        onCommodityClick(it)
+                        onClick(it)
                     },
                     addQuantity = {
-                        viewModel.addCommodity(it)
+                        onAddQty(it)
                     },
                     removeQuantity = {
-                        viewModel.removeCommodity(it)
+                        onRemoveQty(it)
                     }
                 )
             }
@@ -64,7 +90,10 @@ fun CommodityListScreen(
                             .padding(8.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        CircularProgressIndicator(color = Green500)
+                        CircularProgressIndicator(
+                            color = Green500,
+                            modifier = Modifier.testTag("list_loading")
+                        )
                     }
                 }
             }
@@ -82,7 +111,7 @@ fun CommodityListScreen(
                 .fillMaxWidth()
                 .height(56.dp),
             onClick = {
-                viewModel.proceedCommodities()
+                submitCommodities()
             }) {
             Text(
                 text = stringResource(id = R.string.title_checking_out),
@@ -93,6 +122,22 @@ fun CommodityListScreen(
                 )
             )
         }
+    }
+}
+
+@Composable
+fun EmptyList(modifier: Modifier = Modifier) {
+    Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Icon(
+            imageVector = Icons.Filled.ShoppingBasket,
+            contentDescription = null,
+            modifier = Modifier.size(96.dp)
+        )
+        Text(
+            text = stringResource(id = R.string.title_empty_list),
+            modifier = Modifier.padding(top = 8.dp),
+            style = MaterialTheme.typography.h3
+        )
     }
 }
 
@@ -155,6 +200,7 @@ fun CommodityItem(
                     contentDescription = null,
                     tint = Red700,
                     modifier = Modifier
+                        .testTag("plus")
                         .size(36.dp)
                         .clickable {
                             addQuantity(commodity)
@@ -163,7 +209,8 @@ fun CommodityItem(
                 Text(
                     text = commodity.getQuantity().toString(),
                     style = MaterialTheme.typography.h6,
-                    color = Green500
+                    color = Green500,
+                    modifier = Modifier.testTag("quantity_value")
                 )
 
                 Icon(
@@ -171,6 +218,7 @@ fun CommodityItem(
                     contentDescription = null,
                     tint = Red700,
                     modifier = Modifier
+                        .testTag("minus")
                         .size(36.dp)
                         .clickable {
                             removeQuantity(commodity)
@@ -205,7 +253,7 @@ fun ExpenseBottomItem(
 fun CommodityListScreenPreview() {
     OnlineShopTheme {
         Surface {
-            CommodityListScreen(viewModel = hiltViewModel(), onCommodityClick = {})
+            CommodityListRoute(viewModel = hiltViewModel(), onCommodityClick = {})
         }
     }
 }
