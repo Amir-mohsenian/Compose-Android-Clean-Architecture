@@ -1,8 +1,11 @@
 package com.example.onlineshop
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollToIndex
 import com.example.onlineshop.data.generateFakeCommodities
 import com.example.onlineshop.ui.commodity_list.CommodityListScreen
 import com.example.onlineshop.ui.commodity_list.UiState
@@ -65,6 +68,15 @@ class CommodityListScreenTest {
         }
 
         composeTestRule.onNodeWithText("4").assertIsDisplayed()
+    }
+
+    @Test
+    fun showEmptyScreenWhenItemIsEmpty() {
+        composeTestRule.setContent {
+            CommodityListScreen(uiState = UiState(isLoading = false, items = emptyList()))
+        }
+
+        composeTestRule.onNodeWithText("List is Empty").assertIsDisplayed()
     }
 
     @Composable

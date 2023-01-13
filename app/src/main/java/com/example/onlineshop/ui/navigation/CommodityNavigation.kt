@@ -1,6 +1,7 @@
 package com.example.onlineshop.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -63,7 +64,12 @@ fun OnlineShopNavHost(
                 navController.getBackStackEntry(CommodityNavigation.CommodityListDest.route)
             }
             val parentViewModel = hiltViewModel<CommodityListViewModel>(parentEntry)
-            CommodityDetailScreen(viewModel = parentViewModel)
+            val commodity = parentViewModel.detailCommodity.collectAsState()
+            CommodityDetailScreen(
+                commodity = commodity.value,
+                onAddQuantity = {parentViewModel.addCommodity(it)},
+                onRemoveQuantity = {parentViewModel.removeCommodity(it)}
+            )
         }
     }
 }

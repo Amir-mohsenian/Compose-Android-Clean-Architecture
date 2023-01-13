@@ -6,10 +6,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.onlineshop.ui.commodity_list.CommodityItem
 import com.example.onlineshop.ui.commodity_list.CommodityListViewModel
+import com.example.onlineshop.ui.model.Commodity
 
 @Composable
-fun CommodityDetailScreen(modifier: Modifier = Modifier, viewModel: CommodityListViewModel) {
-    val commodity by viewModel.detailCommodity.collectAsState()
+fun CommodityDetailScreen(
+    modifier: Modifier = Modifier,
+    commodity: Commodity?,
+    onAddQuantity: (Commodity) -> Unit,
+    onRemoveQuantity: (Commodity) -> Unit
+) {
 
     commodity?.let {
         var quantity by remember {
@@ -20,10 +25,10 @@ fun CommodityDetailScreen(modifier: Modifier = Modifier, viewModel: CommodityLis
             commodity = it.copy(qty = quantity), onClick = {
 
             }, addQuantity = { cmd ->
-                viewModel.addCommodity(cmd)
+                onAddQuantity(cmd)
                 quantity++
             }, removeQuantity = { cmd ->
-                viewModel.removeCommodity(cmd)
+                onRemoveQuantity(cmd)
                 if (quantity <= 0) {
                     return@CommodityItem
                 }
@@ -35,5 +40,8 @@ fun CommodityDetailScreen(modifier: Modifier = Modifier, viewModel: CommodityLis
 @Preview
 @Composable
 fun CommodityDetailScreenPreview() {
-    CommodityDetailScreen(viewModel = hiltViewModel())
+    CommodityDetailScreen(
+        commodity = Commodity(223, 3423432L, "title 1", "desc 1", qty = 4),
+        onAddQuantity = {},
+        onRemoveQuantity = {})
 }
